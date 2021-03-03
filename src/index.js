@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App1 from './App';
 import reportWebVitals from './reportWebVitals';
+import {Provider} from 'mobx-react';
 
-
-function render(){
+function render(props){
   ReactDOM.render(
     <React.StrictMode>
-      <App1 />
+      <Provider store={props.store || {}}>
+        <App1 />
+      </Provider>
     </React.StrictMode>,
     document.getElementById('root')
   );
@@ -17,11 +19,9 @@ function render(){
 
 if(!window.__POWERED_BY_QIANKUN__){
   console.log('非qiankun模式')
-  render()
+  render({})
 } else {
-  console.log('qiankun模式')
-  render()
-
+  console.log('qiankun模式123')
 }
 
 export async function bootstrap(){
@@ -29,7 +29,7 @@ export async function bootstrap(){
 }
 
 export async function mount(props) {
-  render()
+  render(props)
 }
 
 export async function unmount(){
