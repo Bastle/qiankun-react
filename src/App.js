@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Link, Route  } from "react-router-dom";
 import { observer, MobXProviderContext } from 'mobx-react'
+import actions from './shared/actions';
+import { action } from 'mobx';
 
 
 
@@ -33,7 +35,21 @@ function App() {
 }
 
 const App1 =  observer(() => {
+  const [date, setDate] = useState('loading')
   const ctx = useStores()
+  const changeDate = () => {
+    actions.setGlobalState({date: new Date().toString()})
+  }
+  useEffect(() => {
+    actions.offGlobalStateChange()
+    actions.onGlobalStateChange((state, prevState) => {
+      console.log('子应用观察者1:', state)
+      setDate(state.date || '--')
+    })
+    return () => {
+      actions.offGlobalStateChange()
+    }
+  }, [])
   return (
     <BrowserRouter basename='react'>
       <Link to="/">首页</Link>
@@ -51,11 +67,13 @@ const App1 =  observer(() => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React {ctx.store.todo.myCount}
+          Learn React {ctx?.store?.todo?.myCount}
         </a>
         <button onClick={() => {
             ctx.store.todo.addCount()
           }}>+1</button>
+          <button onClick={changeDate}> setDate </button>
+          <p>{date}</p>
       </header>
     </div>
   )}></Route>

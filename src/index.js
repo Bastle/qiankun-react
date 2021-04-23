@@ -4,8 +4,10 @@ import './index.css';
 import App1 from './App';
 import reportWebVitals from './reportWebVitals';
 import {Provider} from 'mobx-react';
+import actions from './shared/actions';
 
 function render(props){
+  actions.setAction(props.actions)
   ReactDOM.render(
     <React.StrictMode>
       <Provider store={props.store || {}}>
